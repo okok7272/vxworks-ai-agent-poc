@@ -1,6 +1,7 @@
 (() => {
   const vscode = acquireVsCodeApi();
   const element = id => document.getElementById(id);
+  element('demoAgent').addEventListener('change', event => vscode.postMessage({ type: 'demoAgent', value: event.target.value }));
   element('backend').addEventListener('change', event => vscode.postMessage({ type: 'backend', value: event.target.value }));
   document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
     vscode.postMessage({ type: 'action', action: button.dataset.action,
@@ -30,6 +31,10 @@
       control.disabled = data.busy && !['getConsole', 'clearConsole'].includes(control.dataset.action);
     });
     const demo = data.demo;
+    element('demoAgent').value = data.demoAgent ?? 'deterministic';
+    const notConfigured = element('demoAgent').value === 'public-llm';
+    element('demoAgentNotice').textContent = notConfigured ? 'Public LLM: NOT CONFIGURED — no external connection' : 'Deterministic Demo Agent ready';
+    element('demoRun').disabled = data.busy || notConfigured;
     element('demoStatus').textContent = demo?.status ?? 'IDLE';
     element('demoResult').textContent = demo ? JSON.stringify(demo, null, 2) : 'No demo run yet. Model only.';
     element('demoCancel').disabled = !demo?.active;

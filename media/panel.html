@@ -21,7 +21,8 @@
   <p id="notice" role="status">Ready</p>
   <section aria-label="Demo Controller">
     <h2>Controller: Demo Controller</h2>
-    <p>Agent: Deterministic Demo Agent · Backend: Demo/Mock (model only)</p>
+    <p><label>Agent: <select id="demoAgent"><option value="deterministic">Deterministic Demo Agent</option><option value="public-llm">Public LLM</option></select></label> · Backend: Demo/Mock (model only)</p>
+    <p id="demoAgentNotice">Deterministic Demo Agent ready</p>
     <p>Scenario: UDP Timeout Watchdog Recovery · <strong id="demoStatus">IDLE</strong></p>
     <div class="actions"><button id="demoRun">Run Demo Scenario</button><button id="demoCancel">Cancel</button><button id="demoDiff">Show Diff</button><button id="demoEvidence">Show Evidence</button></div>
     <pre id="demoResult">No demo run yet. No SDK or native compilation is used.</pre>

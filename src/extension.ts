@@ -13,6 +13,7 @@ import { MockApplicationBackend } from './backend/MockApplicationBackend';
 import { LoopRequest } from './agent/loop/Types';
 import { ConsoleBuffer } from './backend/ConsoleBuffer';
 import { DemoRunner, DEMO_COMMANDS } from './demo/DemoRunner';
+import { DemoAgentSelection, DEMO_AGENT_OPTIONS, assertDemoAgentConfigured } from './demo/DemoAgentSelection';
 import { MockAgentProvider } from './agent/MockAgentProvider';
 
 let cleanup: (() => Promise<void>) | undefined;
@@ -32,6 +33,7 @@ export async function activate(context: vscode.ExtensionContext) {
   let busyCount = 0;
   let loop: AgentEditLoop | undefined;
   let demo: DemoRunner | undefined;
+  let demoAgent: DemoAgentSelection = 'deterministic';
   const loopConsole = new ConsoleBuffer();
   let renderedLoopStatus: string | undefined;
   const confirm = async (action: PermissionAction, permissions: readonly Permission[], description?: string) => {
@@ -46,7 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (!panel || !backend) { return; }
     void backend.getConsole(500).then(consoleText => panel?.webview.postMessage({
       type: 'state', state: loop?.view.active ? loop.view.backendState ?? backend.state : backend.state, console: loop ? loopConsole.read(500) : consoleText, loop: loop?.view,
-      demo: demo?.view, result: lastResult, busy: !!demo?.view.active || busyCount > 0 || switching || !!loop?.view.active
+      demoAgent, demo: demo?.view, result: lastResult, busy: !!demo?.view.active || busyCount > 0 || switching || !!loop?.view.active
     }));
   };
   let scheduled: NodeJS.Timeout | undefined;
@@ -140,6 +142,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('vxworksAgent.' + name, handler));
   }
   const runDemoScenario = async () => {
+    assertDemoAgentConfigured(demoAgent);
     if (busyCount || switching || loop?.view.active || demo?.view.active) { throw new Error('Another operation is active'); }
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root || !vscode.workspace.isTrusted) { throw new Error('Open a trusted local workspace first'); }
@@ -177,7 +180,12 @@ export async function activate(context: vscode.ExtensionContext) {
     panel.onDidDispose(() => { panel = undefined; lastRendered = undefined; });
     panel.webview.onDidReceiveMessage(async message => {
       try {
-        if (message && Object.hasOwn(demoHandlers, message.type)) { await demoHandlers[message.type as keyof typeof demoHandlers](); }
+        if (message?.type === 'demoAgent') {
+          if (busyCount || switching || loop?.view.active || demo?.view.active) { throw new Error('Wait for the active operation'); }
+          if (!Object.hasOwn(DEMO_AGENT_OPTIONS, message.value)) { throw new Error('Unsupported Demo Agent'); }
+          demoAgent = message.value; publish();
+        }
+        else if (message && Object.hasOwn(demoHandlers, message.type)) { await demoHandlers[message.type as keyof typeof demoHandlers](); }
         else if (message?.type === 'loopRun') { await runAgentLoop({ text: String(message.text ?? ''), expectedOutput: message.expectedOutput || undefined, scenario: message.scenario }); }
         else if (message?.type === 'loopCancel') { await cancelAgentLoop(); }
         else if (message?.type === 'loopDiff') { await showLoopFile('diff.patch'); }

@@ -19,6 +19,8 @@ This Public PoC contains no actual company controller source/documents/logs.
 - [Knowledge metadata](knowledge/README.md): original fixtures, controller scope and confidence; no RAG/indexing.
 - [Provider contract](docs/AGENT_PROVIDER_CONTRACT.md): deterministic provider, optional planning/context,
   offline Company placeholder and tool boundary.
+- [Public LLM boundary](docs/PUBLIC_LLM_PROVIDER.md): vendor-neutral transport, strict Demo responses;
+  Panel Public LLM selection is NOT CONFIGURED. No API connection is installed.
 - [Public/company boundaries and next scenario](docs/PUBLIC_POC.md).
 
 ProviderContext supports selected knowledge excerpts; existing analyze/repair and deterministic behavior remain.

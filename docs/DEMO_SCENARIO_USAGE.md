@@ -9,6 +9,8 @@
 5. **VxWorks Agent: Open Panel** 실행. Development 모드에서는 자동으로 열린다.
 6. Demo 영역의 **Controller: Demo Controller**, **Agent: Deterministic Demo Agent**,
    **Backend: Demo/Mock (model only)**를 확인한다.
+   Agent 선택의 **Public LLM**은 NOT CONFIGURED 상태이며 실행/외부 연결을 하지 않는다.
+   기존 Demo를 실행하려면 **Deterministic Demo Agent**를 선택한다.
 7. **Run Demo Scenario**를 클릭한다. 터미널 명령 입력은 필요 없다.
 8. 격리된 결함 복사본 생성 및 복구 수정에 대한 write_file 승인을 확인한다.
    기존 loop의 target_run/target_stop 승인도 유지되지만, 승인 문구대로 로컬 모델만 실행한다.
