@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src {{csp}}; script-src 'nonce-{{nonce}}';">
+  <link rel="stylesheet" href="{{style}}">
+  <title>VxWorks Agent</title>
+</head>
+<body>
+  <header><div><h1>VxWorks Agent</h1><p>Local SDK · WSL2 · QEMU</p></div>
+    <label>Backend <select id="backend"><option value="mock">Mock</option><option value="sdk">SDK</option></select></label>
+  </header>
+  <section class="status" aria-label="Environment status">
+    <div><span>Backend</span><strong id="backendStatus">MOCK</strong></div>
+    <div><span>SDK</span><strong id="sdk">Unknown</strong></div>
+    <div><span>QEMU</span><strong id="qemu">Stopped</strong></div>
+    <div><span>VxWorks</span><strong id="vxworks">Stopped</strong></div>
+    <div><span>Debugger</span><strong id="debugger">Disconnected</strong></div>
+  </section>
+  <p id="notice" role="status">Ready</p>
+  <section aria-label="Demo Controller">
+    <h2>Controller: Demo Controller</h2>
+    <p>Agent: Deterministic Demo Agent · Backend: Demo/Mock (model only)</p>
+    <p>Scenario: UDP Timeout Watchdog Recovery · <strong id="demoStatus">IDLE</strong></p>
+    <div class="actions"><button id="demoRun">Run Demo Scenario</button><button id="demoCancel">Cancel</button><button id="demoDiff">Show Diff</button><button id="demoEvidence">Show Evidence</button></div>
+    <pre id="demoResult">No demo run yet. No SDK or native compilation is used.</pre>
+  </section>
+  <section class="actions" aria-label="Actions">
+    <button data-action="validateEnvironment">Validate Environment</button>
+    <button data-action="build">Build</button>
+    <button data-action="clean">Clean</button>
+    <button data-action="startQemu">Start QEMU</button>
+    <button data-action="stop">Stop QEMU</button>
+    <button data-action="debugStart">Start Debug</button>
+    <button data-action="debugStop">Stop Debug</button>
+    <button data-action="run">Run RTP</button>
+    <button data-action="fullValidation">Full Validation</button>
+  </section>
+  <form id="agentForm"><label for="request">Agent command</label>
+    <div class="request"><input id="request" placeholder="build / start / debug / run / console / stop" autocomplete="off"><button type="submit">Send</button></div>
+    <small>Deterministic MockAgentProvider. Requests use the selected backend and Permission Manager.</small>
+  </form>
+  <section aria-label="Agent Loop">
+    <h2>Agent Loop: <span id="loopStatus">IDLE</span></h2>
+    <p>Current iteration: <span id="loopIteration">0</span></p>
+    <label>Test request <input id="loopRequest" value="Print Hello Agent"></label>
+    <label>Expected output <input id="loopExpected" value="Hello Agent"></label>
+    <label>Fixture <select id="loopScenario"><option value="combined">Compile + runtime repair</option><option value="compile">Compile repair</option><option value="runtime">Runtime repair</option></select></label>
+    <div class="actions"><button id="loopRun">Run Agent Loop</button><button id="loopCancel">Cancel Agent Loop</button><button id="loopDiff">Show Diff</button><button id="loopEvidence">Show Evidence</button></div>
+    <small>RuleBasedAgentProvider creates a private test application. Mock results are simulated.</small>
+    <pre id="loopDetails"></pre>
+  </section>
+  <h2>Result</h2><pre id="result" aria-live="polite">No operation yet.</pre>
+  <div class="consoleHeader"><h2>Console</h2><div>
+    <button data-action="getConsole">Show Console</button>
+    <button data-action="getConsole" data-lines="100">Last 100 lines</button>
+    <button data-action="clearConsole">Clear Console</button>
+  </div></div>
+  <small>Live view: latest 500 lines. Show Console returns the full retained buffer (up to 2 MiB). Complete logs remain in WSL.</small>
+  <pre id="console" tabindex="0"></pre>
+  <script nonce="{{nonce}}" src="{{script}}"></script>
+</body>
+</html>

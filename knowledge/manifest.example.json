@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "demo-architecture",
+      "title": "Architecture",
+      "source": "Original public fixture authored in this repository",
+      "version": "1",
+      "controller": "demo-controller",
+      "documentType": "controller",
+      "confidence": "VERIFIED",
+      "path": "demo/controller/docs/ARCHITECTURE.md",
+      "purpose": "Public Agent source and knowledge fixture",
+      "redistribution": "original-public"
+    },
+    {
+      "id": "demo-network",
+      "title": "Network specification",
+      "source": "Original public fixture authored in this repository",
+      "version": "1",
+      "controller": "demo-controller",
+      "documentType": "controller",
+      "confidence": "VERIFIED",
+      "path": "demo/controller/docs/NETWORK_SPEC.md",
+      "purpose": "Public Agent source and knowledge fixture",
+      "redistribution": "original-public"
+    },
+    {
+      "id": "demo-requirements",
+      "title": "Requirements",
+      "source": "Original public fixture authored in this repository",
+      "version": "1",
+      "controller": "demo-controller",
+      "documentType": "controller",
+      "confidence": "VERIFIED",
+      "path": "demo/controller/docs/REQUIREMENTS.md",
+      "purpose": "Public Agent source and knowledge fixture",
+      "redistribution": "original-public"
+    },
+    {
+      "id": "demo-source",
+      "title": "Demo source",
+      "source": "Original public fixture authored in this repository",
+      "version": "1",
+      "controller": "demo-controller",
+      "documentType": "source",
+      "confidence": "VERIFIED",
+      "path": "demo/controller/src/main.c",
+      "purpose": "Public Agent source and knowledge fixture",
+      "redistribution": "original-public"
+    },
+    {
+      "id": "demo-tests",
+      "title": "Host assertions",
+      "source": "Original public fixture authored in this repository",
+      "version": "1",
+      "controller": "demo-controller",
+      "documentType": "test",
+      "confidence": "VERIFIED",
+      "path": "demo/controller/tests/test_controller.c",
+      "purpose": "Public Agent source and knowledge fixture",
+      "redistribution": "original-public"
+    }
+  ]
+}

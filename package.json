@@ -1,0 +1,144 @@
+{
+  "name": "vxworks-agent",
+  "displayName": "VxWorks Agent",
+  "description": "Local VxWorks SDK and QEMU agent with explicit execution permissions.",
+  "version": "0.1.0",
+  "publisher": "local-vxworks",
+  "private": true,
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other",
+    "Debuggers"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "build": "npm run compile",
+    "watch": "tsc -w -p .",
+    "test": "npm run compile && node --test dist/test/unit.test.js",
+    "test:sdk": "npm run compile && node dist/test/sdk.integration.js",
+    "test:lifecycle": "npm run compile && node tools/test-lifecycle.cjs",
+    "test:extension": "npm run compile && node tools/test-extension.cjs"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "VxWorks Agent",
+      "properties": {
+        "vxworksAgent.backend": {
+          "type": "string",
+          "enum": [
+            "mock",
+            "sdk"
+          ],
+          "default": "mock",
+          "description": "Backend for the VxWorks Agent. SDK uses the verified local WSL2 environment."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "vxworksAgent.openPanel",
+        "title": "VxWorks Agent: Open Panel"
+      },
+      {
+        "command": "vxworksAgent.validateEnvironment",
+        "title": "VxWorks Agent: Validate Environment"
+      },
+      {
+        "command": "vxworksAgent.build",
+        "title": "VxWorks Agent: Build RTP"
+      },
+      {
+        "command": "vxworksAgent.clean",
+        "title": "VxWorks Agent: Clean Built RTP"
+      },
+      {
+        "command": "vxworksAgent.startQemu",
+        "title": "VxWorks Agent: Start QEMU"
+      },
+      {
+        "command": "vxworksAgent.stop",
+        "title": "VxWorks Agent: Stop QEMU"
+      },
+      {
+        "command": "vxworksAgent.debugStart",
+        "title": "VxWorks Agent: Start Debug"
+      },
+      {
+        "command": "vxworksAgent.debugStop",
+        "title": "VxWorks Agent: Stop Debug"
+      },
+      {
+        "command": "vxworksAgent.run",
+        "title": "VxWorks Agent: Run RTP"
+      },
+      {
+        "command": "vxworksAgent.getConsole",
+        "title": "VxWorks Agent: Show Console"
+      },
+      {
+        "command": "vxworksAgent.clearConsole",
+        "title": "VxWorks Agent: Clear Console"
+      },
+      {
+        "command": "vxworksAgent.fullValidation",
+        "title": "VxWorks Agent: Full Validation"
+      },
+      {
+        "command": "vxworksAgent.agentRequest",
+        "title": "VxWorks Agent: Send Agent Request"
+      },
+      {
+        "command": "vxworksAgent.runAgentLoop",
+        "title": "VxWorks Agent: Run Agent Loop"
+      },
+      {
+        "command": "vxworksAgent.cancelAgentLoop",
+        "title": "VxWorks Agent: Cancel Agent Loop"
+      },
+      {
+        "command": "vxworksAgent.showDiff",
+        "title": "VxWorks Agent: Show Diff"
+      },
+      {
+        "command": "vxworksAgent.showEvidence",
+        "title": "VxWorks Agent: Show Evidence"
+      },
+      {
+        "command": "vxworksAgent.runDemoScenario",
+        "title": "VxWorks Agent: Run Demo Scenario"
+      },
+      {
+        "command": "vxworksAgent.cancelDemoScenario",
+        "title": "VxWorks Agent: Cancel Demo Scenario"
+      },
+      {
+        "command": "vxworksAgent.showDemoDiff",
+        "title": "VxWorks Agent: Show Demo Diff"
+      },
+      {
+        "command": "vxworksAgent.showDemoEvidence",
+        "title": "VxWorks Agent: Show Demo Evidence"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "1.95.0",
+    "@vscode/test-electron": "^2.5.0",
+    "typescript": "^5.9.0"
+  }
+}

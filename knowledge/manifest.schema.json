@@ -1,0 +1,117 @@
+{
+  "title": "Public knowledge manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "entries"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "source",
+          "version",
+          "controller",
+          "documentType",
+          "confidence",
+          "purpose",
+          "redistribution"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "controller": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "documentType": {
+            "enum": [
+              "vendor",
+              "hardware",
+              "controller",
+              "source",
+              "test",
+              "log"
+            ]
+          },
+          "confidence": {
+            "enum": [
+              "VERIFIED",
+              "INFERRED",
+              "UNKNOWN"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*[:\\\\]).+$"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "vendor": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1
+          },
+          "redistribution": {
+            "enum": [
+              "original-public",
+              "metadata-only",
+              "local-only"
+            ]
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "path"
+            ],
+            "not": {
+              "required": [
+                "url"
+              ]
+            }
+          },
+          {
+            "required": [
+              "url"
+            ],
+            "not": {
+              "required": [
+                "path"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

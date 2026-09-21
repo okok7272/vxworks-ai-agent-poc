@@ -1,0 +1,108 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "VxWorks: Validate QEMU workflow",
+      "type": "process",
+      "command": "wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu-22.04",
+        "--exec",
+        "/usr/bin/python3",
+        "-c",
+        "import os,pathlib; p=pathlib.Path.home()/'vxworks-qemu-test/scripts/validate.py'; os.execv('/usr/bin/python3', ['/usr/bin/python3',str(p)])"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VxWorks: Build hello C",
+      "type": "process",
+      "command": "wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu-22.04",
+        "--exec",
+        "/usr/bin/python3",
+        "-c",
+        "import os,pathlib; p=pathlib.Path.home()/'vxworks-qemu-test/scripts/build-example.sh'; os.execv('/bin/bash', ['/bin/bash',str(p)])"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VxWorks: Build CMake example",
+      "type": "process",
+      "command": "wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu-22.04",
+        "--exec",
+        "/usr/bin/python3",
+        "-c",
+        "import os,pathlib; p=pathlib.Path.home()/'vxworks-qemu-test/scripts/build-cmake-example.sh'; os.execv('/bin/bash', ['/bin/bash',str(p)])"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VxWorks: QEMU console",
+      "type": "process",
+      "command": "wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu-22.04",
+        "--exec",
+        "/usr/bin/python3",
+        "-c",
+        "import os,pathlib; p=pathlib.Path.home()/'vxworks-qemu-test/scripts/start-qemu.sh'; os.execv('/bin/bash', ['/bin/bash',str(p)])"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "VxWorks: Connect wrdbg",
+      "type": "process",
+      "command": "wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu-22.04",
+        "--exec",
+        "/usr/bin/python3",
+        "-c",
+        "import os,pathlib; p=pathlib.Path.home()/'vxworks-qemu-test/scripts/connect-wrdbg.sh'; os.execv('/bin/bash', ['/bin/bash',str(p)])"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "type": "shell",
+      "label": "VxWorks Agent: Compile Extension",
+      "command": "npm.cmd run compile",
+      "group": "build"
+    }
+  ]
+}

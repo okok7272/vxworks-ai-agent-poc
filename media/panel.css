@@ -1,0 +1,16 @@
+:root { color-scheme: light dark; }
+body { max-width: 1180px; margin: auto; padding: 24px; color: var(--vscode-foreground); font-family: var(--vscode-font-family); }
+header, .consoleHeader { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+h1 { margin: 0; font-size: 25px; } h2 { font-size: 17px; margin-top: 26px; }
+p, small, .status span { color: var(--vscode-descriptionForeground); }
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 24px 0 12px; }
+.status div { border: 1px solid var(--vscode-panel-border); padding: 16px; border-radius: 6px; }
+.status span, .status strong { display: block; } .status strong { margin-top: 7px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+button, select { padding: 8px 12px; border: 1px solid var(--vscode-button-border, transparent); border-radius: 3px; color: var(--vscode-button-foreground); background: var(--vscode-button-background); cursor: pointer; }
+button:hover { background: var(--vscode-button-hoverBackground); } button:disabled { opacity: .5; cursor: default; }
+input { padding: 10px; border: 1px solid var(--vscode-input-border); color: var(--vscode-input-foreground); background: var(--vscode-input-background); flex: 1; }
+form { margin-top: 25px; } .request { display: flex; gap: 8px; margin: 8px 0; }
+pre { padding: 16px; background: var(--vscode-textCodeBlock-background); white-space: pre-wrap; overflow-wrap: anywhere; border-radius: 4px; max-height: 270px; overflow: auto; }
+#console { min-height: 210px; max-height: 500px; }
+:focus-visible { outline: 2px solid var(--vscode-focusBorder); outline-offset: 2px; }
