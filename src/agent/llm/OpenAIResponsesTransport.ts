@@ -81,7 +81,7 @@ export class OpenAIResponsesTransport implements LLMTransport {
 class SafeTransportError extends Error {}
 
 /** One request at most; no source, edit, build, or backend access. */
-export async function openAISmoke(transport = new OpenAIResponsesTransport(), signal = new AbortController().signal) {
+export async function openAISmoke(transport: LLMTransport = new OpenAIResponsesTransport(), signal = new AbortController().signal) {
   const raw = await transport.send(OPENAI_SMOKE_INPUT, signal);
   const response = validateLLMResponse(raw, '');
   if (response.decision.action.kind !== 'ABORT') { throw new Error('Smoke response must be ABORT'); }

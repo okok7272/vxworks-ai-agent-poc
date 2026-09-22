@@ -39,6 +39,10 @@ Paste the key only into the masked prompt, never into chat, settings, a command 
 
 ## Smoke only — before the future Demo
 
+In Extension Development Host, open **VxWorks Agent: Open Panel**, select **Public LLM**, then click **Test Public LLM Connection** (or run **VxWorks Agent: Test Public LLM Connection** from the Command Palette).
+This uses the Extension Host environment, not an unrelated terminal/Work process. One explicit invocation sends one tiny smoke request when configured; no retries. Missing key sends zero requests. Pending duplicate clicks are ignored. It never runs the Demo, edit permissions, build or backend tools.
+The Panel shows `API: CONNECTED`, OpenAI, the requested model and `Structured Validation: PASS`, or `API: FAILED` with HTTP status when available and a fixed redacted error. READY remains configuration-only; CONNECTED requires the validated response. No connection evidence/log file is written. The model displayed is the actual request model, not a claim about a server-side model snapshot.
+
 With the current compiled output, run once in that same PowerShell:
 
 ```powershell

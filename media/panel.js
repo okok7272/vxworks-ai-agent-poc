@@ -1,6 +1,13 @@
 (() => {
   const vscode = acquireVsCodeApi();
   const element = id => document.getElementById(id);
+  let connectionActive = false;
+  element('testPublicLlmConnection').addEventListener('click', () => {
+    if (connectionActive) return;
+    connectionActive = true;
+    element('testPublicLlmConnection').disabled = true;
+    vscode.postMessage({ type: 'testPublicLlmConnection' });
+  });
   element('demoAgent').addEventListener('change', event => vscode.postMessage({ type: 'demoAgent', value: event.target.value }));
   element('backend').addEventListener('change', event => vscode.postMessage({ type: 'backend', value: event.target.value }));
   document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
@@ -18,6 +25,17 @@
     element(type).addEventListener('click', () => vscode.postMessage({ type }));
   }
   window.addEventListener('message', ({ data }) => {
+    if (data.type === 'connectionState') {
+      connectionActive = data.active;
+      element('testPublicLlmConnection').disabled = connectionActive;
+      const r = data.result;
+      element('connectionResult').textContent = connectionActive ? 'API: TESTING' : r
+        ? 'API: ' + r.api + '\nProvider: ' + r.provider + '\nModel: ' + r.model +
+          (r.structuredValidation ? '\nStructured Validation: ' + r.structuredValidation : '') +
+          (r.httpStatus ? '\nHTTP: ' + r.httpStatus : '') + (r.error ? '\nError: ' + r.error : '')
+        : 'API: NOT TESTED';
+      return;
+    }
     if (data.type !== 'state') return;
     const state = data.state;
     element('backend').value = state.backend;
@@ -31,6 +49,7 @@
       control.disabled = data.busy && !['getConsole', 'clearConsole'].includes(control.dataset.action);
     });
     const demo = data.demo;
+    element('testPublicLlmConnection').disabled = connectionActive || data.busy || data.publicLlm?.status !== 'READY';
     element('demoAgent').value = data.demoAgent ?? 'deterministic';
     const isPublic = element('demoAgent').value === 'public-llm';
     const notConfigured = isPublic && data.publicLlm?.status !== 'READY';

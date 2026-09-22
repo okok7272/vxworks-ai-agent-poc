@@ -16,6 +16,7 @@ import { DemoRunner, DEMO_COMMANDS } from './demo/DemoRunner';
 import { DemoAgentSelection, DEMO_AGENT_OPTIONS, assertDemoAgentConfigured } from './demo/DemoAgentSelection';
 import { OpenAIResponsesTransport, openAIConfiguration } from './agent/llm/OpenAIResponsesTransport';
 import { MockAgentProvider } from './agent/MockAgentProvider';
+import { CONNECTION_COMMAND, ConnectionResult, testPublicLlmConnection } from './agent/llm/PublicLLMConnectionTest';
 
 let cleanup: (() => Promise<void>) | undefined;
 
@@ -35,6 +36,17 @@ export async function activate(context: vscode.ExtensionContext) {
   let loop: AgentEditLoop | undefined;
   let demo: DemoRunner | undefined;
   let demoAgent: DemoAgentSelection = 'deterministic';
+  let connectionResult: ConnectionResult | undefined;
+  let connectionAbort: AbortController | undefined;
+  const sendConnectionState = () => panel?.webview.postMessage({ type: 'connectionState', result: connectionResult, active: !!connectionAbort });
+  const testConnection = async () => {
+    if (connectionAbort || busyCount || switching || loop?.view.active || demo?.view.active) { void sendConnectionState(); return; }
+    connectionAbort = new AbortController(); connectionResult = undefined; busyCount++;
+    void sendConnectionState();
+    try { connectionResult = await testPublicLlmConnection(connectionAbort.signal); return connectionResult; }
+    finally { connectionAbort = undefined; busyCount--; void sendConnectionState(); }
+  };
+  context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_COMMAND, testConnection));
   const loopConsole = new ConsoleBuffer();
   let renderedLoopStatus: string | undefined;
   const confirm = async (action: PermissionAction, permissions: readonly Permission[], description?: string) => {
@@ -187,12 +199,13 @@ export async function activate(context: vscode.ExtensionContext) {
           if (!Object.hasOwn(DEMO_AGENT_OPTIONS, message.value)) { throw new Error('Unsupported Demo Agent'); }
           demoAgent = message.value; publish();
         }
+        else if (message?.type === 'testPublicLlmConnection') { await testConnection(); }
         else if (message && Object.hasOwn(demoHandlers, message.type)) { await demoHandlers[message.type as keyof typeof demoHandlers](); }
         else if (message?.type === 'loopRun') { await runAgentLoop({ text: String(message.text ?? ''), expectedOutput: message.expectedOutput || undefined, scenario: message.scenario }); }
         else if (message?.type === 'loopCancel') { await cancelAgentLoop(); }
         else if (message?.type === 'loopDiff') { await showLoopFile('diff.patch'); }
         else if (message?.type === 'loopEvidence') { await showLoopFile('result.json'); }
-        else if (message?.type === 'ready') { publish(); }
+        else if (message?.type === 'ready') { publish(); void sendConnectionState(); }
         else if (message?.type === 'rendered') {
           renderedLoopStatus = message.loopStatus; lastRendered = message.state; renderedValidationStatus = message.validationStatus;
         }
@@ -215,6 +228,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (input !== undefined) { return request(input); }
   }));
   cleanup = async () => {
+    connectionAbort?.abort();
     if (scheduled) { clearTimeout(scheduled); }
     await demo?.cancel(); await loop?.cancel(); await backend.dispose(); panel?.dispose();
   };

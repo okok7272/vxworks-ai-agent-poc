@@ -50,6 +50,10 @@
     },
     "commands": [
       {
+        "command": "vxworksAgent.testPublicLlmConnection",
+        "title": "VxWorks Agent: Test Public LLM Connection"
+      },
+      {
         "command": "vxworksAgent.openPanel",
         "title": "VxWorks Agent: Open Panel"
       },
