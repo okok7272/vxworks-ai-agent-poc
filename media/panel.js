@@ -32,8 +32,11 @@
     });
     const demo = data.demo;
     element('demoAgent').value = data.demoAgent ?? 'deterministic';
-    const notConfigured = element('demoAgent').value === 'public-llm';
-    element('demoAgentNotice').textContent = notConfigured ? 'Public LLM: NOT CONFIGURED — no external connection' : 'Deterministic Demo Agent ready';
+    const isPublic = element('demoAgent').value === 'public-llm';
+    const notConfigured = isPublic && data.publicLlm?.status !== 'READY';
+    element('demoAgentNotice').textContent = isPublic
+      ? 'Public LLM: ' + (notConfigured ? 'NOT CONFIGURED' : 'READY') + ' | Provider: OpenAI | Model: ' + (data.publicLlm?.model ?? 'not configured') + ' | Run sends selected public Demo context'
+      : 'Deterministic Demo Agent ready';
     element('demoRun').disabled = data.busy || notConfigured;
     element('demoStatus').textContent = demo?.status ?? 'IDLE';
     element('demoResult').textContent = demo ? JSON.stringify(demo, null, 2) : 'No demo run yet. Model only.';

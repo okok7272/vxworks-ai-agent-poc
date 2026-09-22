@@ -1,4 +1,9 @@
-# Public LLM provider boundary — offline only
+# Public LLM provider boundary
+
+Update: optional OpenAI Responses transport and Demo handoff are now implemented. See
+[OpenAI transport/setup](OPENAI_TRANSPORT.md) for the current configuration, Panel behavior and validation limits.
+The following records the preceding offline contract milestone; its no-HTTP/NOT-CONFIGURED-only statements
+describe that milestone, not the current optional transport. Company integration remains offline.
 
 No API/HTTP client, endpoint, key, external SDK or network request is implemented.
 MockLLMTransport returns explicitly supplied JSON strings in memory. ChatGPT Work is not assumed to be

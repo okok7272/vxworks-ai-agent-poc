@@ -14,6 +14,7 @@ import { LoopRequest } from './agent/loop/Types';
 import { ConsoleBuffer } from './backend/ConsoleBuffer';
 import { DemoRunner, DEMO_COMMANDS } from './demo/DemoRunner';
 import { DemoAgentSelection, DEMO_AGENT_OPTIONS, assertDemoAgentConfigured } from './demo/DemoAgentSelection';
+import { OpenAIResponsesTransport, openAIConfiguration } from './agent/llm/OpenAIResponsesTransport';
 import { MockAgentProvider } from './agent/MockAgentProvider';
 
 let cleanup: (() => Promise<void>) | undefined;
@@ -48,7 +49,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (!panel || !backend) { return; }
     void backend.getConsole(500).then(consoleText => panel?.webview.postMessage({
       type: 'state', state: loop?.view.active ? loop.view.backendState ?? backend.state : backend.state, console: loop ? loopConsole.read(500) : consoleText, loop: loop?.view,
-      demoAgent, demo: demo?.view, result: lastResult, busy: !!demo?.view.active || busyCount > 0 || switching || !!loop?.view.active
+      demoAgent, publicLlm: openAIConfiguration(), demo: demo?.view, result: lastResult, busy: !!demo?.view.active || busyCount > 0 || switching || !!loop?.view.active
     }));
   };
   let scheduled: NodeJS.Timeout | undefined;
@@ -146,7 +147,8 @@ export async function activate(context: vscode.ExtensionContext) {
     if (busyCount || switching || loop?.view.active || demo?.view.active) { throw new Error('Another operation is active'); }
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root || !vscode.workspace.isTrusted) { throw new Error('Open a trusted local workspace first'); }
-    demo = new DemoRunner(context.extensionPath, root, controller.permissions);
+    demo = new DemoRunner(context.extensionPath, root, controller.permissions,
+      demoAgent === 'public-llm' ? new OpenAIResponsesTransport() : undefined);
     demo.on('state', schedule);
     try { lastResult = await demo.start(); return lastResult; } finally { publish(); }
   };

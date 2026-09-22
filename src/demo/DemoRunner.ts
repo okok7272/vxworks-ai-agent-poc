@@ -6,13 +6,15 @@ import { PermissionManager } from '../permissions/PermissionManager';
 import { DemoBackend } from './DemoBackend';
 import { DemoProvider } from './DemoProvider';
 import { DEMO, EXPECTED, digest, readDemo } from './DemoAdapters';
+import type { LLMTransport } from '../agent/llm/LLMTransport';
 export const DEMO_COMMANDS = { demoRun: 'runDemoScenario', demoCancel: 'cancelDemoScenario', demoDiff: 'showDemoDiff', demoEvidence: 'showDemoEvidence' } as const;
 export class DemoRunner extends EventEmitter {
-  view = { controller: DEMO.title, agent: DEMO.agent, backend: 'Demo/Mock (model only)', scenario: DEMO.scenario,
+  view = { controller: DEMO.title, agent: String(DEMO.agent), backend: 'Demo/Mock (model only)', scenario: DEMO.scenario,
     status: 'IDLE', active: false, iteration: 0, build: 'Not run', validation: 'Not run', expected: EXPECTED, actual: '', evidenceDirectory: '', error: '' };
   private loop?: AgentEditLoop;
   private work?: Promise<unknown>;
-  constructor(private readonly root: string, private readonly project: string, private readonly permissions: PermissionManager) { super(); }
+  constructor(private readonly root: string, private readonly project: string, private readonly permissions: PermissionManager,
+    private readonly transport?: LLMTransport) { super(); if (transport) { this.view.agent = 'Public LLM'; } }
   async cancel(): Promise<void> { await this.loop?.cancel(); await this.work; }
   start(): Promise<unknown> {
     if (this.view.active) { return Promise.reject(new Error('Demo scenario is active')); }
@@ -22,7 +24,7 @@ export class DemoRunner extends EventEmitter {
   private async execute() {
     try {
       const baseline = readDemo(this.root, 'src/main.c'); const baselineHash = digest(baseline);
-      const provider = new DemoProvider(this.root, baseline);
+      const provider = new DemoProvider(this.root, baseline, this.transport);
       this.loop = new AgentEditLoop(this.project, provider, this.permissions, () => new DemoBackend(this.project, baseline),
         { iterations: 2, runtimeFixes: 1, compileFixes: 0 }, { prefix: 'demo-run', baseline, summariesOnly: true,
           runDescription: 'Run a local Demo model only, then release its isolated copy. No SDK/QEMU/wrdbg/target process is started.' });

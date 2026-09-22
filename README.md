@@ -10,7 +10,8 @@ separate Demo Controller recovery scenario through the same Edit Loop using a sa
 This is not C compilation or an RTP execution. [Click-by-click guide](docs/DEMO_SCENARIO_USAGE.md).
 
 Future: Public LLM or Company GPT → same core → future WorkbenchBackend / actual target,
-with private controller knowledge supplied separately. No external LLM API is connected.
+with private controller knowledge supplied separately. Optional OpenAI Responses transport is available;
+it is NOT CONFIGURED without a process API key. No live LLM Demo has been validated yet.
 This Public PoC contains no actual company controller source/documents/logs.
 
 ## Public components
@@ -20,7 +21,8 @@ This Public PoC contains no actual company controller source/documents/logs.
 - [Provider contract](docs/AGENT_PROVIDER_CONTRACT.md): deterministic provider, optional planning/context,
   offline Company placeholder and tool boundary.
 - [Public LLM boundary](docs/PUBLIC_LLM_PROVIDER.md): vendor-neutral transport, strict Demo responses;
-  Panel Public LLM selection is NOT CONFIGURED. No API connection is installed.
+  [OpenAI setup and smoke test](docs/OPENAI_TRANSPORT.md): environment-only key, native fetch,
+  READY/NOT CONFIGURED state; deterministic mode remains the default.
 - [Public/company boundaries and next scenario](docs/PUBLIC_POC.md).
 
 ProviderContext supports selected knowledge excerpts; existing analyze/repair and deterministic behavior remain.

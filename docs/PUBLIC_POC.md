@@ -59,3 +59,7 @@ Preserve PermissionManager, bounded retries and evidence. Do not connect any API
 scope is confirmed. Do not touch the SDK, Linux scripts, original Hello World or any actual board.
 Run only changed contract/host tests. Explain the need before introducing a new SDK/RTP integration run.
 ~~~
+# Current transport update
+
+Optional public OpenAI Responses transport is available; see [setup and boundaries](OPENAI_TRANSPORT.md).
+The original planning notes below predate that adapter. Company integration is still unconfigured.
