@@ -16,6 +16,7 @@ import { DemoRunner, DEMO_COMMANDS } from './demo/DemoRunner';
 import { DemoAgentSelection, DEMO_AGENT_OPTIONS, assertDemoAgentConfigured } from './demo/DemoAgentSelection';
 import { OpenAIResponsesTransport, openAIConfiguration } from './agent/llm/OpenAIResponsesTransport';
 import { MockAgentProvider } from './agent/MockAgentProvider';
+import { resolveDemoRoots } from './demo/DemoRoots';
 import { CONNECTION_COMMAND, ConnectionResult, testPublicLlmConnection } from './agent/llm/PublicLLMConnectionTest';
 
 let cleanup: (() => Promise<void>) | undefined;
@@ -158,8 +159,9 @@ export async function activate(context: vscode.ExtensionContext) {
     assertDemoAgentConfigured(demoAgent);
     if (busyCount || switching || loop?.view.active || demo?.view.active) { throw new Error('Another operation is active'); }
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-    if (!root || !vscode.workspace.isTrusted) { throw new Error('Open a trusted local workspace first'); }
-    demo = new DemoRunner(context.extensionPath, root, controller.permissions,
+    const roots = resolveDemoRoots(context.extensionPath, root, vscode.workspace.isTrusted,
+      context.extensionMode === vscode.ExtensionMode.Development);
+    demo = new DemoRunner(roots.baselineRoot, roots.projectRoot, controller.permissions,
       demoAgent === 'public-llm' ? new OpenAIResponsesTransport() : undefined);
     demo.on('state', schedule);
     try { lastResult = await demo.start(); return lastResult; } finally { publish(); }

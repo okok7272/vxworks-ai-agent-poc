@@ -55,7 +55,7 @@ No key: SKIPPED, no HTTP. With key: one short request asks for ABORT; parse and 
 
 1. Open the project in the VS Code instance started above.
 2. F5 → **Run VxWorks Agent Extension**.
-3. In the new Extension Development Host, open this project as a trusted workspace, then run **VxWorks Agent: Open Panel**.
+3. In the new Extension Development Host, run **VxWorks Agent: Open Panel**. No Folder Opened is supported for this public Demo only: baseline is read from the extension's demo/controller, and each isolated session is created under extension artifacts/demo-session-*/artifacts/demo-run-*. Baseline reads reject paths/junctions escaping the extension/controller. Existing untrusted workspaces remain blocked. Production and general Agent/Edit Loop keep their trusted-workspace requirement.
 4. Select **Public LLM** in the Demo Agent dropdown. Check **READY**, Provider: OpenAI and the intended model. Selection alone sends nothing.
 5. Click **Run Demo Scenario**. This explicitly sends the selected public Demo context when recovery judgement is needed.
 6. Review/approve the existing **write_file** and model run/cleanup permission dialogs, including the proposed repair diff. A denial stops the loop.

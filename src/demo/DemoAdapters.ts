@@ -1,6 +1,7 @@
-import { readFileSync, realpathSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { requireWithin } from './DemoRoots';
 import type { ProviderContext, ProviderDecision } from '../agent/ProviderContract';
 import type { EditProposal } from '../agent/loop/Types';
 
@@ -10,9 +11,8 @@ export const FIX = '    s->watchdog_ms = now;';
 export const DEFECT = '    /* DEMO DEFECT: watchdog timestamp not refreshed */';
 export const digest = (s: string) => createHash('sha256').update(s).digest('hex');
 export function readDemo(root: string, path: string): string {
-  const base = realpathSync(join(root, 'demo/controller'));
-  const file = realpathSync(join(base, path));
-  if (relative(base, file).startsWith('..')) { throw new Error('Demo path escaped its root'); }
+  const base = requireWithin(root, join(root, 'demo/controller'));
+  const file = requireWithin(base, join(base, path));
   const text = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
   if (text.length > 32768) { throw new Error('Demo input exceeds context limit'); }
   return text;
